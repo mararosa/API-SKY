@@ -13,8 +13,8 @@ const UsersSchema = new Schema({
         }
     ],
     dataCadastro: { type: Date, default: Date.now},
-    dataAtualizacao: { type: Date},
-    dataLogin: { type: Date},
+    dataAtualizacao: { type: Date, default: Date.now},
+    dataLogin: { type: Date, default: Date.now},
   })
   
   const usersModel = mongoose.model('users', UsersSchema);
