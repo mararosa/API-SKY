@@ -1,8 +1,8 @@
-const { connect } = require('../models/dataBase')
-const usersModel = require('../models/UsersSchema')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const SECRET = "umEHhDyErggnyUWMSQL1SsBgVc309uELyJVr1Wyrnc0oztFHuaVfu3GqNYyo9J8"
+const { connect } = require('../models/dataBase');
+const usersModel = require('../models/UsersSchema');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const SECRET = "umEHhDyErggnyUWMSQL1SsBgVc309uELyJVr1Wyrnc0oztFHuaVfu3GqNYyo9J8";
 
 connect()
 
@@ -57,7 +57,7 @@ const signIn = async (request, response) => {
     })
 }
 
-const search = (request, response) => {
+const searchUser = (request, response) => {
     const userId = request.params.userId
     usersModel.findById(userId, (error, user) => {
         if (user) {
@@ -87,6 +87,6 @@ const remove = (request, response) => {
 module.exports = {
     signUp,
     signIn,
-    search,
+    searchUser,
     remove,
 }
