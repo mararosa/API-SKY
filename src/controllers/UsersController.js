@@ -6,34 +6,36 @@ const SEGREDO = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAMvjU3H0JWqXLTN
 
 connect()
 
-const signUp = (request, response) => {
+const signUp = async (request, response) => {
+    const user = await usersModel.find({ email: request.body.email })
+    if ( user.length >= 1 ) {
+        return response.status(409).json({
+            message: 'E- mail ja existe'
+        });
 
-    if (!request.body.senha) {
+    } else {
 
-        return response.status(400).json({
-            message: 'Digite a senha'
+        const senhaCriptografada = bcrypt.hashSync(request.body.senha)
+
+        request.body.senha = senhaCriptografada
+
+        const newUser = new usersModel(request.body)
+
+        newUser.save((error) => {
+
+            if (error) {
+
+                return response.status(500).json({
+                    error: error
+                });
+
+            }
+            return response.status(201).send(newUser)
+
         })
-
     }
-    const senhaCriptografada = bcrypt.hashSync(request.body.senha)
-
-    request.body.senha = senhaCriptografada
-
-    const newUser = new usersModel(request.body)
-
-    newUser.save((error) => {
-
-        if (error) {
-
-            return response.status(500).json({
-                error: error
-            });
-
-        }
-        return response.status(201).send(newUser)
-
-    })
 }
+
 
 const signIn = async (request, response) => {
 
@@ -53,19 +55,21 @@ const signIn = async (request, response) => {
 
                 { expiresIn: 1800 }
             )
-            return response.status(200).send({user, token})   
+            return response.status(200).send({ user, token })
         }
-    
+
         return response.status(400).json({
-           message: 'Usuario e/ou senha invalidos'})
+            message: 'Usuario e/ou senha invalidos'
+        })
     }
 
-        return response.status(401).json({
-            message: 'Usuario e/ou senha invalidos'})
-    
+    return response.status(401).json({
+        message: 'Usuario e/ou senha invalidos'
+    })
+
 }
 
 module.exports = {
-signUp,
-signIn,
+    signUp,
+    signIn,
 }
