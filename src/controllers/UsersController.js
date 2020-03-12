@@ -57,6 +57,18 @@ const signIn = async (request, response) => {
     })
 }
 
+const search = (request, response) => {
+    const userId = request.params.userId
+    usersModel.findById(userId, (error, user) => {
+        if (user) {
+            return response.status(200).send({ user });
+            }
+        return response.status(500).json({
+            error: error
+        });
+    });
+}
+
 const remove = (request, response) => {
     const userId = request.params.userId
     usersModel.findByIdAndDelete(userId, (error, user) => {
@@ -75,5 +87,6 @@ const remove = (request, response) => {
 module.exports = {
     signUp,
     signIn,
+    search,
     remove,
 }
