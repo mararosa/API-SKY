@@ -10,7 +10,7 @@ const signUp = async (request, response) => {
     const user = await usersModel.find({ email: request.body.email })
     if (user.length >= 1) {
         return response.status(409).json({
-            message: 'E- mail ja existe'
+            message: "E- mail ja existe"
         });
     } else {
         const senhaCriptografada = bcrypt.hashSync(request.body.senha)
@@ -23,7 +23,7 @@ const signUp = async (request, response) => {
                 });
             }
             return response.status(201).send(newUser)
-        })
+        });
     }
 }
 
@@ -53,12 +53,14 @@ const remove = (request, response) => {
     const userId = request.params.userId
     usersModel.findByIdAndDelete(userId, (error, user) => {
         if (user) {
-            return response.status(200).send('Usuário deletado!')
-        }
+            return response.status(200).json({
+                message: "Usuário deletado"
+                });
+            }
         return response.status(500).json({
             error: error
-        })
-    })
+        });
+    });
 }
 
 
