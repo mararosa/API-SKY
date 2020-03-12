@@ -16,13 +16,18 @@ const signUp = async (request, response) => {
         const senhaCriptografada = bcrypt.hashSync(request.body.senha)
         request.body.senha = senhaCriptografada
         const newUser = new usersModel(request.body)
+        const token = jwt.sign(
+            {}, //payload
+            SECRET,
+            { expiresIn: 1800 }
+        )
         newUser.save((error) => {
             if (error) {
                 return response.status(500).json({
                     error: error
                 });
             }
-            return response.status(201).send(newUser)
+            return response.status(200).send({ newUser, token })
         });
     }
 }
@@ -41,7 +46,7 @@ const signIn = async (request, response) => {
                 SECRET,
                 { expiresIn: 1800 }
             )
-            return response.status(200).send({ token })
+            return response.status(200).send({ user, token })
         }
         return response.status(401).json({
             message: 'Usuario e/ou senha invalidos'
