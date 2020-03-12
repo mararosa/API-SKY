@@ -40,7 +40,7 @@ const signIn = async (request, response) => {
             )
             return response.status(200).send({ user, token })
         }
-        return response.status(400).json({
+        return response.status(401).json({
             message: 'Usuario e/ou senha invalidos'
         })
     }
