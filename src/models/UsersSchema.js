@@ -46,14 +46,10 @@ const UsersSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  tokens: [
-    {
-      token: {
-        type: String,
-        require: true
-      }
-    }
-  ]
+  token: {
+    type: String,
+    require: true
+  }
 });
 
 const usersModel = mongoose.model("users", UsersSchema);
