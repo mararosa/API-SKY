@@ -13,24 +13,23 @@ const signUp = async (request, response) => {
     return response.status(409).json({
       message: "E- mail ja existe"
     });
-  } else {
-    const senhaCriptografada = bcrypt.hashSync(request.body.senha);
-    request.body.senha = senhaCriptografada;
-    const newUser = new usersModel(request.body);
-    const token = jwt.sign(
-      {}, //payload
-      SECRET,
-      { expiresIn: 1800 }
-    );
-    newUser.save(error => {
-      if (error) {
-        return response.status(500).json({
-          error: error
-        });
-      }
-      return response.status(200).send({ newUser, token });
-    });
   }
+  const senhaCriptografada = bcrypt.hashSync(request.body.senha);
+  request.body.senha = senhaCriptografada;
+  const newUser = new usersModel(request.body);
+  const token = jwt.sign(
+    {}, // payload
+    SECRET,
+    { expiresIn: 1800 }
+  );
+  newUser.save(e => {
+    if (e) {
+      return response.status(400).json({
+        error: e
+      });
+    }
+    return response.status(200).send({ newUser, token });
+  });
 };
 
 const signIn = async (request, response) => {
@@ -39,7 +38,10 @@ const signIn = async (request, response) => {
     const correctPassword = bcrypt.compareSync(request.body.senha, user.senha);
     if (correctPassword) {
       const token = jwt.sign(
-        {}, // payload
+        {
+          email: user.email,
+          userId: user._id
+        }, // payload
         SECRET,
         { expiresIn: 1800 }
       );
@@ -60,7 +62,7 @@ const searchUser = (request, response) => {
     if (user) {
       return response.status(200).send({ user });
     }
-    return response.status(500).json({
+    return response.status(401).json({
       err: error
     });
   });
