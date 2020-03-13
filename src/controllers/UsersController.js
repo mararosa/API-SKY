@@ -45,6 +45,7 @@ const signIn = async (request, response) => {
         SECRET,
         { expiresIn: 1800 }
       );
+      user.data_login = new Date();
       return response.status(200).send({ user, token });
     }
     return response.status(401).json({
