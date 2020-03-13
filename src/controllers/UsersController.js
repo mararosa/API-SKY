@@ -43,7 +43,7 @@ const signIn = async (request, response) => {
           userId: user._id
         }, // payload
         SECRET,
-        { expiresIn: 1800 }
+        { expiresIn: 5000 }
       );
       user.data_login = new Date();
       return response.status(200).send({ user, token });
