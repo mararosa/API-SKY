@@ -3,8 +3,7 @@ const jwt = require("jsonwebtoken");
 const { connect } = require("../models/dataBase");
 const usersModel = require("../models/UsersSchema");
 
-const SECRET =
-  "umEHhDyErggnyUWMSQL1SsBgVc309uELyJVr1Wyrnc0oztFHuaVfu3GqNYyo9J8";
+const SECRET = process.env.SECRET;
 
 connect();
 
