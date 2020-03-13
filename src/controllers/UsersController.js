@@ -43,7 +43,7 @@ const signIn = async (request, response) => {
         {
           email: user.email,
           userId: user._id
-        }, //payload
+        }, // payload
         SECRET,
         { expiresIn: 1800 }
       );
@@ -59,27 +59,27 @@ const signIn = async (request, response) => {
 };
 
 const searchUser = (request, response) => {
-  const userId = request.params.userId;
-  usersModel.findById(userId, (error, user) => {
+  const id = request.params.userId;
+  usersModel.findById(id, (error, user) => {
     if (user) {
       return response.status(200).send({ user });
     }
     return response.status(500).json({
-      error: error
+      err: error
     });
   });
 };
 
 const remove = (request, response) => {
-  const userId = request.params.userId;
-  usersModel.findByIdAndDelete(userId, (error, user) => {
+  const id = request.params.userId;
+  usersModel.findByIdAndDelete(id, (error, user) => {
     if (user) {
       return response.status(200).json({
         message: "Usuário deletado"
       });
     }
     return response.status(500).json({
-      error: error
+      err: error
     });
   });
 };
