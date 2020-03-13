@@ -20,7 +20,7 @@ const signUp = async (request, response) => {
   const token = jwt.sign(
     {}, // payload
     SECRET,
-    { expiresIn: 1800 }
+    { expiresIn: 5000 }
   );
   newUser.save(e => {
     if (e) {
