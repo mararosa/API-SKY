@@ -38,15 +38,18 @@ const signIn = async (request, response) => {
   if (user) {
     const correctPassword = bcrypt.compareSync(request.body.senha, user.senha);
     if (correctPassword) {
-      // const token = jwt.sign(
-      //   {
-      //     email: user.email,
-      //     userId: user._id
-      //   }, // payload
-      //   SECRET,
-      //   { expiresIn: 5000 }
-      // );
+      const token = jwt.sign(
+        {
+          email: user.email,
+          userId: user._id
+        }, // payload
+        SECRET,
+        { expiresIn: 5000 }
+      );
       user.data_login = new Date();
+      user.token = token;
+      user.save();
+      console.log(user);
       return response.status(200).send({ user });
     }
     return response.status(401).json({
@@ -70,6 +73,15 @@ const searchUser = (request, response) => {
   });
 };
 
+const getAll = (request, response) => {
+  usersModel.find((error, users) => {
+    if (error) {
+      return response.status(500).send(error);
+    }
+    return response.status(200).send(users);
+  });
+};
+
 const remove = (request, response) => {
   const id = request.params.userId;
   usersModel.findByIdAndDelete(id, (error, user) => {
@@ -88,5 +100,6 @@ module.exports = {
   signUp,
   signIn,
   searchUser,
+  getAll,
   remove
 };
