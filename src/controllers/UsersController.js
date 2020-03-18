@@ -49,7 +49,6 @@ const signIn = async (request, response) => {
       user.data_login = new Date();
       user.token = token;
       user.save();
-      console.log(user);
       return response.status(200).send({ user });
     }
     return response.status(401).json({
