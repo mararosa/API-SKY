@@ -22,13 +22,14 @@ const signUp = async (request, response) => {
     SECRET,
     { expiresIn: 5000 }
   );
+  newUser.token = token;
   newUser.save(e => {
     if (e) {
       return response.status(400).json({
         error: e
       });
     }
-    return response.status(200).send({ newUser, token });
+    return response.status(200).send({ newUser });
   });
 };
 
@@ -37,16 +38,16 @@ const signIn = async (request, response) => {
   if (user) {
     const correctPassword = bcrypt.compareSync(request.body.senha, user.senha);
     if (correctPassword) {
-      const token = jwt.sign(
-        {
-          email: user.email,
-          userId: user._id
-        }, // payload
-        SECRET,
-        { expiresIn: 5000 }
-      );
+      // const token = jwt.sign(
+      //   {
+      //     email: user.email,
+      //     userId: user._id
+      //   }, // payload
+      //   SECRET,
+      //   { expiresIn: 5000 }
+      // );
       user.data_login = new Date();
-      return response.status(200).send({ user, token });
+      return response.status(200).send({ user });
     }
     return response.status(401).json({
       message: "Usuario e/ou senha invalidos"
