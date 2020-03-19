@@ -7,6 +7,14 @@ const SECRET = process.env.SECRET;
 
 connect();
 
+function calculateMinutes(dataAtual, dataAntiga) {
+  const minutesAtual = dataAtual.getHours() * 60 + dataAtual.getMinutes();
+  const minutesAntigo = dataAntiga.getHours() * 60 + dataAntiga.getMinutes();
+
+  const diffMinutes = minutesAtual - minutesAntigo;
+  return diffMinutes;
+}
+
 const signUp = async (request, response) => {
   const user = await usersModel.find({ email: request.body.email });
   if (user.length >= 1) {
@@ -20,7 +28,7 @@ const signUp = async (request, response) => {
   const token = jwt.sign(
     {}, // payload
     SECRET,
-    { expiresIn: 5000 }
+    { expiresIn: 1800 }
   );
   newUser.token = token;
   newUser.save(e => {
@@ -44,7 +52,7 @@ const signIn = async (request, response) => {
           userId: user._id
         }, // payload
         SECRET,
-        { expiresIn: 5000 }
+        { expiresIn: 1800 }
       );
       user.data_login = new Date();
       user.token = token;
@@ -64,6 +72,16 @@ const searchUser = (request, response) => {
   const id = request.params.userId;
   usersModel.findById(id, (error, user) => {
     if (user) {
+      const dataAtual = new Date();
+      const dataAntiga = user.data_login;
+      console.log(dataAtual);
+      console.log(dataAntiga);
+      const minutes = calculateMinutes(dataAtual, dataAntiga);
+      if (minutes > 30) {
+        return response.status(400).json({
+          message: "Sessão inválida"
+        });
+      }
       return response.status(200).send({ user });
     }
     return response.status(401).json({
