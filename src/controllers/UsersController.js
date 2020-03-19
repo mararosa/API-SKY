@@ -74,8 +74,6 @@ const searchUser = (request, response) => {
     if (user) {
       const dataAtual = new Date();
       const dataAntiga = user.data_login;
-      console.log(dataAtual);
-      console.log(dataAntiga);
       const minutes = calculateMinutes(dataAtual, dataAntiga);
       if (minutes > 30) {
         return response.status(400).json({
